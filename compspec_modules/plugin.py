@@ -157,9 +157,10 @@ class Plugin(PluginBase):
         # Create the spack graph
         # We could use args.name here, but "spack" is more accurate for the subsystem
         g = ModuleGraph("environment-modules")
+        g.metadata["type"] = "software"
 
-        # Add the root node for the spack subsystem
-        g.generate_root()
+        # Add the root node - assume module paths may change in availability
+        g.generate_root(attributes={"module_paths": list(module_paths)}, typ="software")
 
         # Add each module path to the graph
         for module_path in module_paths:
