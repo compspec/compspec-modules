@@ -28,9 +28,10 @@ Here is an easy way (in the devcontainer) to get a bunch of testing modules.
 ```bash
 git clone https://github.com/shawfdong/modulefiles /tmp/modulefiles
 export MODULEPATH=$MODULEPATH:/tmp/modulefiles
+export PATH=~/.local/bin:$PATH
 ```
 
-Then run an extraction with spack. You will want to provide the root to the spack install to describe:
+Then run an extraction for your environment modules:
 
 ```bash
 compspec extract modules
@@ -42,6 +43,7 @@ To save to file:
 compspec extract --outfile module-subsystem.json modules
 ```
 
+You can see the example [example/module-subsystem.json](example/module-subsystem.json).
 
 <details>
 
