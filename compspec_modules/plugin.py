@@ -111,9 +111,19 @@ class ModuleGraph(JsonGraph):
                 self.add_bidirectional_edge(parent, child["label"])
 
 
+def derive_module_paths(module_args):
+    """
+    Starting from a MODULEPATH string, split into separate paths.
+    """
+    module_paths = set()
+    for module_path in module_args:
+        [module_paths.add(x.strip()) for x in module_path.split(":") if x.strip()]
+    return module_paths
+
+
 class Plugin(PluginBase):
     """
-    The spack extractor plugin
+    The environment module extractor plugin
     """
 
     # These metadata fields are required (and checked for)
@@ -138,9 +148,32 @@ class Plugin(PluginBase):
             nargs="*",
         )
 
+    def detect(self):
+        """
+        Detect checks for module install.
+        """
+        modulepath = os.environ.get("MODULEPATH")
+        if not modulepath:
+            return False
+
+        modulepath = derive_module_paths([modulepath])
+
+        # Add each module path to the graph
+        for module_path in modulepath:
+            if not os.path.exists(module_path):
+                continue
+
+            # If we find module directories, quickly return true
+            paths = self.get_module_paths(module_path)
+            if paths:
+                return True
+
+        # If we get here, nothing found
+        return False
+
     def extract(self, args, extra):
         """
-        Search a spack install for installed software
+        Search module paths for modules
         """
         # If a direct module path isn't provided, derive from the environment
         if not args.module_args:
@@ -150,9 +183,7 @@ class Plugin(PluginBase):
             args.module_args = [modulepath]
 
         # Split into unique paths (based on : separator)
-        module_paths = set()
-        for module_path in args.module_args:
-            [module_paths.add(x.strip()) for x in module_path.split(":") if x.strip()]
+        module_paths = derive_module_paths(args.module_args)
 
         # Create the spack graph
         # We could use args.name here, but "spack" is more accurate for the subsystem
@@ -160,7 +191,7 @@ class Plugin(PluginBase):
         g.metadata["type"] = "software"
 
         # Add the root node - assume module paths may change in availability
-        g.generate_root(attributes={"module_paths": list(module_paths)}, typ="software")
+        g.generate_root()
 
         # Add each module path to the graph
         for module_path in module_paths:
