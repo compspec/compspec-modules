@@ -1,11 +1,11 @@
 {
     "graph": {
         "nodes": {
-            "software0": {
+            "environment-modules0": {
                 "metadata": {
-                    "type": "software",
-                    "basename": "software",
-                    "name": "software0",
+                    "type": "environment-modules",
+                    "basename": "environment-modules",
+                    "name": "environment-modules0",
                     "id": 0,
                     "uniq_id": 0,
                     "containment": {
@@ -14,15 +14,9 @@
                     "size": 1,
                     "unit": "",
                     "rank": 0,
-                    "exclusive": false,
-                    "attributes": {
-                        "module_paths": [
-                            "/tmp/modulefiles",
-                            "/usr/local/Modules/modulefiles"
-                        ]
-                    }
+                    "exclusive": false
                 },
-                "label": "software0"
+                "label": "environment-modules0"
             },
             "module1": {
                 "metadata": {

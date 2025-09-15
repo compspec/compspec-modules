@@ -15,3 +15,4 @@ The versions coincide with releases on pip. Only major versions will be released
 
 ## [0.0.x](https://github.com/compspec/compspec-modules/tree/main) (0.0.x)
  - Initial creation of project skeleton (0.0.0)
+ - Addition of detect command (0.0.12)
