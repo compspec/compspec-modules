@@ -14,5 +14,6 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/compspec/compspec-modules/tree/main) (0.0.x)
- - Initial creation of project skeleton (0.0.0)
+ - Detect renamed to check new detect is headless extract (0.0.13)
  - Addition of detect command (0.0.12)
+ - Initial creation of project skeleton (0.0.0)

@@ -148,9 +148,9 @@ class Plugin(PluginBase):
             nargs="*",
         )
 
-    def detect(self):
+    def check(self):
         """
-        Detect checks for module install.
+        Check for module install.
         """
         modulepath = os.environ.get("MODULEPATH")
         if not modulepath:
@@ -171,9 +171,18 @@ class Plugin(PluginBase):
         # If we get here, nothing found
         return False
 
+    def detect(self):
+        """
+        Detect runs a headless extraction
+        """
+        modulepath = os.environ.get("MODULEPATH")
+        if not modulepath:
+            return
+        return self._extract(modulepath)
+
     def extract(self, args, extra):
         """
-        Search module paths for modules
+        Search module paths for modules.
         """
         # If a direct module path isn't provided, derive from the environment
         if not args.module_args:
@@ -181,9 +190,14 @@ class Plugin(PluginBase):
             if not modulepath:
                 raise ValueError("Please provide a module path or export MODULEPATH.")
             args.module_args = [modulepath]
+        return self._extract(args.module_args, args.name)
 
+    def _extract(self, module_args, name=None):
+        """
+        Shared extraction logic.
+        """
         # Split into unique paths (based on : separator)
-        module_paths = derive_module_paths(args.module_args)
+        module_paths = derive_module_paths(module_args)
 
         # Create the spack graph
         # We could use args.name here, but "spack" is more accurate for the subsystem
@@ -215,7 +229,7 @@ class Plugin(PluginBase):
                 g.add_module(module_file, relpath)
 
         # Generate a dictionary with custom metadata
-        return g.to_dict({"install_name": args.name})
+        return g.to_dict({"install_name": name or self.name})
 
     def get_module_paths(self, root):
         """
